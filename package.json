@@ -1,0 +1,17 @@
+{
+  "name": "deliveryman-tracker",
+  "version": "1.0.0",
+  "description": "Last-Mile Delivery Tracker for Small Businesses | MERN Stack  Built a real-time delivery tracking system using React.js, Node.js, and Mapbox API, enabling businesses to assign and  monitor deliveries live.",
+  "main": "index.js",
+  "scripts": {
+    "start": "concurrently \"npm run server\" \"npm run client\"",
+    "server": "cd server && node index.js",
+    "client": "cd client && npm run dev"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "concurrently": "^9.1.2"
+  }
+}
