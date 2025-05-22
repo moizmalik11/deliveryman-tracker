@@ -36,8 +36,3 @@ function App() {
 }
 
 export default App;
-
-console.log('App component rendered');
-console.log('DriverMap component rendered');
-console.log('Socket connection established');
-console.log('Driver location updated');
