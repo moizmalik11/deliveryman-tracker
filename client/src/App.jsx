@@ -2,35 +2,37 @@ import { useEffect, useState } from 'react';
 import { io } from 'socket.io-client';
 import DriverMap from './components/DriverMap';
 
-const socket = io('http://localhost:5000');
-
+const socket = io('http://localhost:5000', {
+  transports: ['websocket'], // ✅ Ye add karo taake disconnect na ho
+});
 function App() {
-  const [driverLocation, setDriverLocation] = useState({
-    lat: 24.8607,
-    lng: 67.0011,
-  });
+  const [driverLocation, setDriverLocation] = useState(null);
 
   useEffect(() => {
+    // Emit once (or from a button later)
     socket.emit('locationUpdate', {
-      lat: driverLocation.lat,
-      lng: driverLocation.lng,
+      lat: 24.8607,
+      lng: 67.0011,
       driverId: 'driver123',
     });
 
+    // Listen for real-time updates from backend
     socket.on('locationBroadcast', (data) => {
-      console.log('📍 Location from backend:', data);
-      setDriverLocation({ lat: data.lat, lng: data.lng });
+      console.log('📍 Location received:', data); // ✅ Check this
+      setDriverLocation(data);
     });
 
-    return () => {
-      socket.off('locationBroadcast');
-    };
+    return () => socket.disconnect();
   }, []);
 
   return (
     <div>
-      <h1>Delivery Tracker</h1>
-      <DriverMap location={driverLocation} />
+      <h2 style={{ textAlign: 'center' }}>🚚 Delivery Tracker</h2>
+      {driverLocation ? (
+        <DriverMap location={driverLocation} />
+      ) : (
+        <p style={{ textAlign: 'center' }}>Waiting for driver location...</p>
+      )}
     </div>
   );
 }
