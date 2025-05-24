@@ -13,7 +13,7 @@ function App() {
     socket.emit('locationUpdate', {
       lat: 24.8607,
       lng: 67.0011,
-      driverId: 'driver123',
+      driverId: '1_driver', // Example driver ID
     });
 
     // Listen for real-time updates from backend
