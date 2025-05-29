@@ -54,42 +54,34 @@
 // const PORT = process.env.PORT || 5000;
 // server.listen(PORT, () => console.log(`🚀 Server running on port ${PORT}`));
 const express = require('express');
-const mongoose = require('mongoose');
 const cors = require('cors');
-require('dotenv').config();
-
 const app = express();
+const PORT = 5000;
+
 app.use(cors());
 app.use(express.json());
 
-mongoose.connect(process.env.MONGO_URI, { useNewUrlParser: true, useUnifiedTopology: true })
-  .then(() => console.log('MongoDB Connected'))
-  .catch(err => console.log(err));
+// Dummy drivers data
+const drivers = [
+  { id: 1, name: 'Ali', status: 'Delivering', location: 'Karachi' },
+  { id: 2, name: 'Sara', status: 'Idle', location: 'Lahore' },
+];
 
-const Driver = require('./models/Driver');
-const Order = require('./models/Order');
+// Dummy orders data
+const orders = [
+  { id: 101, product: 'Phone', driverId: 1, status: 'On the way' },
+  { id: 102, product: 'Laptop', driverId: 2, status: 'Pending pickup' },
+];
 
-app.get('/api/drivers', async (req, res) => {
-  const drivers = await Driver.find();
+// Routes
+app.get('/api/drivers', (req, res) => {
   res.json(drivers);
 });
 
-app.post('/api/drivers', async (req, res) => {
-  const newDriver = new Driver(req.body);
-  await newDriver.save();
-  res.json(newDriver);
-});
-
-app.post('/api/orders', async (req, res) => {
-  const newOrder = new Order(req.body);
-  await newOrder.save();
-  res.json(newOrder);
-});
-
-app.get('/api/orders', async (req, res) => {
-  const orders = await Order.find().populate('driver');
+app.get('/api/orders', (req, res) => {
   res.json(orders);
 });
 
-const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+app.listen(PORT, () => {
+  console.log(`Server running on http://localhost:${PORT}`);
+});
