@@ -38,40 +38,75 @@
 // }
 
 // export default App;
-import { useEffect, useState } from 'react';
-import axios from 'axios';
-
+import { useEffect, useState } from "react";
 
 function App() {
   const [drivers, setDrivers] = useState([]);
   const [orders, setOrders] = useState([]);
 
   useEffect(() => {
-    axios.get('http://localhost:5000/api/drivers').then(res => setDrivers(res.data));
-    axios.get('http://localhost:5000/api/orders').then(res => setOrders(res.data));
+    fetch("http://localhost:5000/api/drivers")
+      .then((res) => res.json())
+      .then(setDrivers)
+      .catch(console.error);
+
+    fetch("http://localhost:5000/api/orders")
+      .then((res) => res.json())
+      .then(setOrders)
+      .catch(console.error);
   }, []);
 
   return (
-    <div className="p-4 max-w-4xl mx-auto">
-      <h1 className="text-2xl font-bold mb-4">DeliveryMan Dashboard</h1>
+    <div className="min-h-screen bg-gray-100 p-6">
+      <h1 className="text-3xl font-bold mb-6">DeliveryMan Dashboard</h1>
 
-      <h2 className="text-xl font-semibold">Drivers</h2>
-      <ul className="mb-4">
-        {drivers.map(driver => (
-          <li key={driver._id} className="border p-2 rounded my-2">
-            {driver.name} - Location: {driver.currentLocation}
-          </li>
-        ))}
-      </ul>
+      <div className="grid md:grid-cols-2 gap-6">
+        {/* Drivers Section */}
+        <section className="bg-white rounded-lg shadow p-4">
+          <h2 className="text-xl font-semibold mb-4">Drivers</h2>
+          <table className="w-full table-auto border-collapse border border-gray-300">
+            <thead>
+              <tr className="bg-gray-200">
+                <th className="border border-gray-300 px-3 py-1 text-left">Name</th>
+                <th className="border border-gray-300 px-3 py-1 text-left">Status</th>
+                <th className="border border-gray-300 px-3 py-1 text-left">Location</th>
+              </tr>
+            </thead>
+            <tbody>
+              {drivers.map((d) => (
+                <tr key={d.id} className="hover:bg-gray-100">
+                  <td className="border border-gray-300 px-3 py-1">{d.name}</td>
+                  <td className="border border-gray-300 px-3 py-1">{d.status}</td>
+                  <td className="border border-gray-300 px-3 py-1">{d.location}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </section>
 
-      <h2 className="text-xl font-semibold">Orders</h2>
-      <ul>
-        {orders.map(order => (
-          <li key={order._id} className="border p-2 rounded my-2">
-            {order.item} - Status: {order.status} - Driver: {order.driver?.name || 'Unassigned'}
-          </li>
-        ))}
-      </ul>
+        {/* Orders Section */}
+        <section className="bg-white rounded-lg shadow p-4">
+          <h2 className="text-xl font-semibold mb-4">Orders</h2>
+          <table className="w-full table-auto border-collapse border border-gray-300">
+            <thead>
+              <tr className="bg-gray-200">
+                <th className="border border-gray-300 px-3 py-1 text-left">Product</th>
+                <th className="border border-gray-300 px-3 py-1 text-left">Driver ID</th>
+                <th className="border border-gray-300 px-3 py-1 text-left">Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              {orders.map((o) => (
+                <tr key={o.id} className="hover:bg-gray-100">
+                  <td className="border border-gray-300 px-3 py-1">{o.product}</td>
+                  <td className="border border-gray-300 px-3 py-1">{o.driverId}</td>
+                  <td className="border border-gray-300 px-3 py-1">{o.status}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </section>
+      </div>
     </div>
   );
 }
